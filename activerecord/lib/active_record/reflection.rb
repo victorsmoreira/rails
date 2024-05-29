@@ -436,7 +436,7 @@ module ActiveRecord
       end
 
       def compute_name(name) # :nodoc:
-        active_record.name.demodulize == name ? "::#{name}" : name
+        active_record.name.demodulize == name && Object.const_defined?("::#{name}") ? "::#{name}" : name
       end
 
       # Returns +true+ if +self+ and +other_aggregation+ have the same +name+ attribute, +active_record+ attribute,

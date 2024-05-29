@@ -196,6 +196,24 @@ class ReflectionTest < ActiveRecord::TestCase
     assert_equal User, reflection.klass
   end
 
+  def test_reflection_klass_with_same_demodularized_name_undefined
+    user = User
+    Object.send :remove_const, :User
+    reflection = ActiveRecord::Reflection.create(
+      :has_one,
+      :user,
+      nil,
+      {},
+      Admin::User
+    )
+
+    assert_equal Admin::User, reflection.klass
+  ensure
+    unless Object.const_defined?(:User)
+      Object.const_set :User, user
+    end
+  end
+
   def test_reflection_klass_with_same_demodularized_different_modularized_name
     reflection = ActiveRecord::Reflection.create(
       :has_one,
